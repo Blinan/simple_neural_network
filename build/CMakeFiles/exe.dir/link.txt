@@ -1,0 +1,3 @@
+D:\DevEnv\cmake\bin\cmake.exe -E rm -f CMakeFiles\exe.dir/objects.a
+D:\DevEnv\Mingw\bin\ar.exe qc CMakeFiles\exe.dir/objects.a @CMakeFiles\exe.dir\objects1.rsp
+D:\DevEnv\Mingw\bin\gcc.exe -g -Wl,--whole-archive CMakeFiles\exe.dir/objects.a -Wl,--no-whole-archive -o exe.exe -Wl,--out-implib,libexe.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\exe.dir\linkLibs.rsp

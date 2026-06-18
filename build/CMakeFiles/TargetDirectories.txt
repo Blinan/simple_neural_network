@@ -1,0 +1,3 @@
+D:/Project/github_repository/simple_neural_network/build/CMakeFiles/exe.dir
+D:/Project/github_repository/simple_neural_network/build/CMakeFiles/edit_cache.dir
+D:/Project/github_repository/simple_neural_network/build/CMakeFiles/rebuild_cache.dir
