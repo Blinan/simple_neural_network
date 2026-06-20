@@ -8,6 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "D:/Project/github_repository/simple_neural_network/log.c" "CMakeFiles/exe.dir/log.c.obj" "gcc" "CMakeFiles/exe.dir/log.c.obj.d"
   "D:/Project/github_repository/simple_neural_network/main.c" "CMakeFiles/exe.dir/main.c.obj" "gcc" "CMakeFiles/exe.dir/main.c.obj.d"
   )
 

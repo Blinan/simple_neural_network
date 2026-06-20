@@ -128,6 +128,30 @@ exe/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\exe.dir\build.make CMakeFiles/exe.dir/build
 .PHONY : exe/fast
 
+log.obj: log.c.obj
+.PHONY : log.obj
+
+# target to build an object file
+log.c.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\exe.dir\build.make CMakeFiles/exe.dir/log.c.obj
+.PHONY : log.c.obj
+
+log.i: log.c.i
+.PHONY : log.i
+
+# target to preprocess a source file
+log.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\exe.dir\build.make CMakeFiles/exe.dir/log.c.i
+.PHONY : log.c.i
+
+log.s: log.c.s
+.PHONY : log.s
+
+# target to generate assembly for a file
+log.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\exe.dir\build.make CMakeFiles/exe.dir/log.c.s
+.PHONY : log.c.s
+
 main.obj: main.c.obj
 .PHONY : main.obj
 
@@ -161,6 +185,9 @@ help:
 	@echo ... edit_cache
 	@echo ... rebuild_cache
 	@echo ... exe
+	@echo ... log.obj
+	@echo ... log.i
+	@echo ... log.s
 	@echo ... main.obj
 	@echo ... main.i
 	@echo ... main.s

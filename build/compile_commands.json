@@ -4,5 +4,11 @@
   "command": "D:\\DevEnv\\Mingw\\bin\\gcc.exe   -g -o CMakeFiles\\exe.dir\\main.c.obj -c D:\\Project\\github_repository\\simple_neural_network\\main.c",
   "file": "D:/Project/github_repository/simple_neural_network/main.c",
   "output": "CMakeFiles/exe.dir/main.c.obj"
+},
+{
+  "directory": "D:/Project/github_repository/simple_neural_network/build",
+  "command": "D:\\DevEnv\\Mingw\\bin\\gcc.exe   -g -o CMakeFiles\\exe.dir\\log.c.obj -c D:\\Project\\github_repository\\simple_neural_network\\log.c",
+  "file": "D:/Project/github_repository/simple_neural_network/log.c",
+  "output": "CMakeFiles/exe.dir/log.c.obj"
 }
 ]

@@ -1,0 +1,11 @@
+CMakeFiles/exe.dir/log.c.obj: \
+ D:\Project\github_repository\simple_neural_network\log.c \
+ D:\Project\github_repository\simple_neural_network\log.h \
+ d:\devenv\mingw\include\stdio.h d:\devenv\mingw\include\_mingw.h \
+ d:\devenv\mingw\include\msvcrtver.h d:\devenv\mingw\include\w32api.h \
+ d:\devenv\mingw\include\sdkddkver.h \
+ d:\devenv\mingw\lib\gcc\mingw32\6.3.0\include\stddef.h \
+ d:\devenv\mingw\include\sys/types.h \
+ d:\devenv\mingw\lib\gcc\mingw32\6.3.0\include\stdarg.h \
+ d:\devenv\mingw\lib\gcc\mingw32\6.3.0\include\stdbool.h \
+ d:\devenv\mingw\include\time.h d:\devenv\mingw\include\sys\types.h
