@@ -5,6 +5,7 @@
 #include <math.h>
 #include <limits.h>
 #include "log.h"
+#include <windows.h>
 //--------------------------------
 #define MATRIX_TYPE double
 #define _DETAILED_ 0
@@ -19,7 +20,7 @@
 /*ERROR TABLE - 错误提示*/
 #define M_mul_001        "@ERROR: Matrix_Dimensions Wrong!\n\tDetails:(M_mul_001)_mat_left->column != _mat_right->row\n"
 #define M_add_sub_003    "@ERROR: Matrix_Dimensions Wrong!\n\tDetails:(M_add_sub_003)_mat_subed != _mat_minus\n"
-#define PRECISION "%.3lf\t"
+#define PRECISION "%.1lf\t"
 
 
 //--------------------------------
@@ -49,7 +50,7 @@ void *cat(void *l, void *r, char type){
         char *rc = (char *)r;
         int length_lc = strlen(lc);
         int length_rc = strlen(rc);
-        char *result = (char *)malloc(sizeof(char)*length_lc+length_rc);
+        char *result = (char *)malloc(sizeof(char)*(length_lc+length_rc));
         for(int i = 0; i < length_lc; ++i){
             result[i] = lc[i];
         }
@@ -115,7 +116,11 @@ char *str_split(const char *str,const char *sep){
     return substrings;
 }
 
-
+void normalization(double *arr, int len, int maxvalue){//归一化 
+    for(int i = 0; i < len; ++i){
+        arr[i] = arr[i]/maxvalue;
+    }
+}
 
 //END define useful function
 //--------------------------------
@@ -232,7 +237,7 @@ typedef struct _Matrix{
 
 
 
-static int num=0;
+
 Matrix *Matrix_gen(int row, int column, MATRIX_TYPE *data) {/*
  * Generate a new Matrix(struct).
  * 导入_生成矩阵*/
@@ -241,7 +246,7 @@ Matrix *Matrix_gen(int row, int column, MATRIX_TYPE *data) {/*
     _mat->column = column;
     int size = _mat->row * _mat->column;
     _mat->data = (MATRIX_TYPE *) malloc((size) * sizeof(MATRIX_TYPE));
-    log_info("%d",++num);
+    //log_info("%d",++num);
     memcpy(_mat->data, data, (size)*sizeof(MATRIX_TYPE));
     /*
     int i
@@ -258,17 +263,20 @@ Matrix *M_copy(Matrix *_mat_source){
 Matrix *M_T(Matrix *_mat_source) {/*
  * Transpose (create).
  * 转置 */
-
-    Matrix *mat = M_copy(_mat_source);
+    Matrix *_mat = (Matrix *) malloc(sizeof(Matrix));
+    _mat->column = _mat_source->row;
+    _mat->row = _mat_source->column;
+    MATRIX_TYPE *data = (MATRIX_TYPE *) malloc(sizeof(MATRIX_TYPE) * (_mat->column) * (_mat->row));
+    _mat->data = data;
     int i, j;
-    for(i = 0; i < mat->row-1; ++i){
-        for(j = i+1; j < mat->column; ++j){
-            swapDouble(mat->data + mat->column * i + j,mat->data + mat->column * i + j);
+    for (i = 0; i < (_mat->row); i++) {
+        for (j = 0; j < _mat->column; j++) {
+            data[i * (_mat->column) + j] = _mat_source->data[j * (_mat_source->column) + i];
         }
     }
-    swapInt(&mat->row, &mat->column);
-    return mat;
+    return _mat;
 }
+
 
 int M_free(Matrix *_mat) {/*
  * Free the memory of the Matrix (create).
@@ -436,6 +444,8 @@ typedef struct _neuralNetwork{
     Matrix *who;
 } neuralNetwork;
 
+static int num=0;
+
 neuralNetwork *Net_init(neuralNetwork *self,int input_nodes, int hidden_nodes, int output_nodes, double learningrate){
     self->input_nodes = input_nodes;
     self->hidden_nodes = hidden_nodes;
@@ -480,6 +490,9 @@ neuralNetwork *Net_train(neuralNetwork *self,MATRIX_TYPE *inputs_list,int len_in
     Matrix *wih__right =M_easy_mul(   M_easy_mul(hiddent_errors, hiddent_outputs)   ,   wih_ones_sub_final_outputs);//(hiddent_errors * hiddent_outputs*(1.0 - hiddent_outputs) )
     Matrix *wih__result = M_numul(M_mul( wih__right , M_T(mat_inputs)), self->learningrate);//self.lr * numpy.dot((hiddent_errors * hiddent_outputs*(1.0 - hiddent_outputs) ), numpy.transpose(inputs))
     self->wih = M_add_sub(1, self->wih, -1, wih__result);
+    log_info("train DONE %d",num++);
+    if(num==382)
+    Sleep(1);
     
     
     return self;
@@ -492,6 +505,8 @@ Matrix *query(neuralNetwork *self, MATRIX_TYPE *inputs_list, int len_inputs_list
     Matrix *final_inputs = M_mul(self->who, hiddent_outputs);
     Matrix *final_outputs = M_sigmoid(final_inputs);
     return final_outputs;
+    log_info("query DONE");
+    exit(1);
 }
 
 int is_get_score(neuralNetwork *self, MATRIX_TYPE *inputs_list,int len_inputs_list,MATRIX_TYPE *targets_list, int len_targets_list){
@@ -532,6 +547,7 @@ int main(){
     Matrix *mat2 = Matrix_gen(5,3,arr2);
     Matrix *mat3 = M_mul(mat1, mat2);
     mat3 = M_rand(mat3);
+    
     //M_print(mat3);
     //M_print(M_T(mat1));
 
@@ -569,6 +585,7 @@ int main(){
     vector** testing_data = (vector **)malloc(sizeof(vector *)*testing_nu_rows); 
     testing_data = readlines(testing_file_obj, testing_data,testing_nu_rows, testing_nu_column);
     vector2D_print(testing_data, testing_nu_rows, testing_nu_column);
+    
 //END prepare data
 ////--------------------------------
 
@@ -583,6 +600,10 @@ Net =  Net_init(Net, input_nodes, hidden_nodes, output_nodes, learningrate);
 for(int i = 0; i < training_nu_rows; ++i){
     
     double *training_input_lists = training_data[i]->data+1;
+    
+    normalization(training_input_lists, input_nodes, 255);
+    
+    
     Matrix *training_target_lists = M_Zeros(output_nodes, 1);
     training_target_lists->data[(int)(training_data[i]->data[0])]+=1;
     Net = Net_train(Net, training_input_lists, input_nodes, training_target_lists->data, output_nodes);
@@ -590,6 +611,7 @@ for(int i = 0; i < training_nu_rows; ++i){
 int score=0;
 for(int i = 0; i < testing_nu_column; ++i){
     double *testing_input_lists = testing_data[i]->data+1;
+    normalization(testing_input_lists, input_nodes, 256);
     Matrix *testing_target_lists = M_Zeros(output_nodes, 1);
     testing_target_lists->data[(int)(training_data[i]->data[0])]+=1;
     score +=is_get_score(Net, testing_input_lists, input_nodes, testing_target_lists, output_nodes);
