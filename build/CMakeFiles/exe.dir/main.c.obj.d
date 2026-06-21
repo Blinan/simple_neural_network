@@ -9,6 +9,6 @@ CMakeFiles/exe.dir/main.c.obj: \
  d:\devenv\mingw\include\time.h d:\devenv\mingw\include\sys\types.h \
  d:\devenv\mingw\include\stdlib.h d:\devenv\mingw\include\string.h \
  d:\devenv\mingw\include\strings.h d:\devenv\mingw\include\wchar.h \
- d:\devenv\mingw\include\math.h \
+ d:\devenv\mingw\include\math.h d:\devenv\mingw\include\limits.h \
  D:\Project\github_repository\simple_neural_network\log.h \
  d:\devenv\mingw\lib\gcc\mingw32\6.3.0\include\stdbool.h
