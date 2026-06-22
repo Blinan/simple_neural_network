@@ -122,6 +122,7 @@ void normalization(double *arr, int len, int maxvalue){//归一化
     }
 }
 
+
 //END define useful function
 //--------------------------------
 
@@ -131,8 +132,8 @@ void normalization(double *arr, int len, int maxvalue){//归一化
 
 typedef struct _vector
 {
-    vec_type_t size;
-    vec_type_t capacity;
+    int size;
+    int capacity;
     vec_type_t *data;
 }vector;
 
@@ -159,13 +160,12 @@ vector *vector_alloc_capacity(vector *vec,int cap, vec_type_t type_size){
 	return vec;
 }
 
-void vector2D_print(vector**vector2D, int row, int maxcolum){
-    for(int i = 0; i < 10; ++i){
+void vector2D_fprint(FILE *log ,vector**vector2D, int row, int maxcolum){
+    for(int i = 0; i < row; ++i){
         for(int j = 0; j < vector2D[i]->size; ++j){
-            //log_info("vector2D[%d]->data[%d] = %d",i , j,vector2D[i]->data[j]);
+            //fprintf(log ,"vector2D[%d]->data[%d] = %d",i , j,vector2D[i]->data[j]);
         }
-        
-        log_info("vector2D[%d]->data[%d] = %f",i , 0,vector2D[i]->data[0]);
+        fprintf(log, "vector2D[%d], size=%d,data[%d] = %f\n",i ,vector2D[i]->size ,0,vector2D[i]->data[0]);
     }
 }
 
@@ -174,26 +174,20 @@ void vector2D_print(vector**vector2D, int row, int maxcolum){
 vector **readlines(FILE *fileobj,vector ** vector2D,int maxrow, int maxcolumn){
     int buffer_size = 20, i, c;
     char *buffer = (char *)malloc(sizeof(char)*buffer_size);
-    for(i = 0; i < buffer_size; ++i)
-                buffer[i]='\0';
+    for(i = 0; i < buffer_size; ++i)buffer[i]='\0';
     //printf("buffer[0]= %d",buffer[0]);
     for(i = 0; i < maxrow; ++i){
         vector2D[i] = vector_create();
-        vector * temp = vector2D[i]; 
         vector2D[i] = vector_alloc_capacity(vector2D[i], maxcolumn, sizeof(vec_type_t));
-        temp = vector2D[i]; 
-        int i = 0;
     }
     int nu_line = 0;
     int nu_digit=0;    //digit position in a line
     c = fgetc(fileobj);
     while(c != EOF){
-        
         for(i=0; c != ',' && c!= '\n'; ++i){
             buffer[i]=c;
             c = fgetc(fileobj);
         }
-        
         if(c == ',' || c == '\n'){
             vector2D[nu_line]->data[nu_digit] = atof(buffer);
             //万恶之源，忘记初始化buffer
@@ -206,16 +200,14 @@ vector **readlines(FILE *fileobj,vector ** vector2D,int maxrow, int maxcolumn){
             // log_info("vector2D[%d]->data[%d]=%d",nu_line,nu_digit,vector2D[nu_line]->data[nu_digit]);
             
             ++nu_digit;
+            if(c == '\n'){
+                vector2D[nu_line]->size = nu_digit;
+                ++nu_line;
+                //log_info("nu_digit = %d", nu_digit);
+                nu_digit = 0;
+            }
         }
-        if(c == '\n'){
-            vector2D[nu_line]->size = nu_digit;
-            ++nu_line;
-            //log_info("nu_digit = %d", nu_digit);
-            nu_digit = 0;
-            //万恶之源，忘记初始化buffer
-            for(i = 0; i < buffer_size; ++i)
-                buffer[i]='\0';
-        }
+        
         c = fgetc(fileobj);
 
     }
@@ -369,6 +361,7 @@ Matrix *M_easy_mul(Matrix *_mat_left, Matrix *_mat_right){
 Matrix *M_rand(Matrix *_mat){
 
     Matrix *mat = M_Zeros(_mat->row, _mat->column);
+    M_free(_mat);
     struct tm time;
     srand(time.tm_hour*60*60+time.tm_min*60+time.tm_sec);
     int size_mat = mat->row * mat->column, i;
@@ -429,6 +422,18 @@ int M_print(Matrix *_mat) {/*
     }
     return 0;
 }
+
+int M_fprint(FILE *file_obj, Matrix *_mat){
+    fprintf(file_obj, ">>Matrix_%x, row=%d, column=%d:\n", _mat, _mat->row, _mat->column);
+    int i, j;
+    for (i = 0; i < _mat->row; i++) {
+        for (j = 0; j < _mat->column; j++) {
+            fprintf(file_obj,PRECISION, _mat->data[i * (_mat->column) + j]);
+        }
+        fprintf(file_obj ,"\n");
+    }
+    return 0;
+}
 //END define data struction of matrix 
 //--------------------------------
 
@@ -451,12 +456,11 @@ neuralNetwork *Net_init(neuralNetwork *self,int input_nodes, int hidden_nodes, i
     self->hidden_nodes = hidden_nodes;
     self->output_nodes = output_nodes;
     self->learningrate = learningrate;
-    self->wih = M_Zeros(hidden_nodes, input_nodes);
-    self->wih = M_rand(self->wih);
-    self->who = M_Zeros(output_nodes, hidden_nodes);
-    self->who = M_rand(self->who);
+    self->wih = M_rand(M_Zeros(hidden_nodes, input_nodes));
+    self->who = M_rand(M_Zeros(output_nodes, hidden_nodes));
 
-    log_trace("Net_init DONE");
+    
+    //log_trace("Net_init DONE");
     return self;
 }
 
@@ -496,6 +500,14 @@ neuralNetwork *Net_train(neuralNetwork *self,MATRIX_TYPE *inputs_list,int len_in
     
     
     return self;
+}
+
+void Net_log_fprint(FILE *file_obj,neuralNetwork *Net){
+    fprintf(file_obj, "Net->wih=\n");
+    M_fprint(file_obj, Net->wih);
+    fprintf(file_obj, "Net->who=\n");
+    M_fprint(file_obj, Net->who);
+
 }
 
 Matrix *query(neuralNetwork *self, MATRIX_TYPE *inputs_list, int len_inputs_list){
@@ -554,9 +566,11 @@ int main(){
     const char *training_file_path = "D:\\Project\\dataset\\mnist_train.csv";
     const char *testing_file_path = "D:\\Project\\dataset\\mnist_test.csv";
     const char *test_path = "D:\\Project\\github_repository\\simple_neural_network\\test_data.csv";
+    const char *log_file_path = "D:\\Project\\github_repository\\simple_neural_network\\log.txt";
     FILE *training_file_obj = fopen(training_file_path, "r");
     FILE *testing_file_obj = fopen(testing_file_path, "r");
     FILE *test_file_obj = fopen(test_path, "r");
+    FILE *log_file_obj = fopen(log_file_path, "w");
     int num;    
 //line
 
@@ -573,7 +587,7 @@ int main(){
     int training_nu_column=785;
     vector** training_data = (vector **)malloc(sizeof(vector *)*training_nu_rows); 
     training_data = readlines(training_file_obj, training_data,training_nu_rows, training_nu_column);
-    vector2D_print(training_data, training_nu_rows, training_nu_column);
+    vector2D_fprint(log_file_obj, training_data, training_nu_rows, training_nu_column);
 
     // Matrix *training_datas[training_nu_rows];
 
@@ -584,7 +598,7 @@ int main(){
     int testing_nu_column=785;
     vector** testing_data = (vector **)malloc(sizeof(vector *)*testing_nu_rows); 
     testing_data = readlines(testing_file_obj, testing_data,testing_nu_rows, testing_nu_column);
-    vector2D_print(testing_data, testing_nu_rows, testing_nu_column);
+    vector2D_fprint(log_file_obj, testing_data, testing_nu_rows, testing_nu_column);
     
 //END prepare data
 ////--------------------------------
@@ -597,6 +611,8 @@ int hidden_nodes=100;
 int output_nodes=10;
 double learningrate=0.1;
 Net =  Net_init(Net, input_nodes, hidden_nodes, output_nodes, learningrate);
+Net_log_fprint(log_file_obj, Net);
+
 for(int i = 0; i < training_nu_rows; ++i){
     
     double *training_input_lists = training_data[i]->data+1;
@@ -625,6 +641,7 @@ printf("scorePercent = %f\n",scorePercent);
     fclose(training_file_obj);
     fclose(testing_file_obj);
     fclose(test_file_obj);
+    fclose(log_file_obj);
 //test part
 //--------------------------------
     // char * c=str_split(",,,,,,,,,,,,45454,,,,,,,,,,5656,asd,as,as,as,,as",",");
