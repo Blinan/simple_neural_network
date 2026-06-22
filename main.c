@@ -41,80 +41,88 @@ void swapDouble(double *x,double *y){
     *y = temp;
 }
 
-void *cat(void *l, void *r, char type){
-    switch (type)
-    {
-    case 'c':{
+// void *cat(void *l, void *r, char type){
+//     switch (type)
+//     {
+//     case 'c':{
     
-        char *lc = (char *)l;
-        char *rc = (char *)r;
-        int length_lc = strlen(lc);
-        int length_rc = strlen(rc);
-        char *result = (char *)malloc(sizeof(char)*(length_lc+length_rc));
-        for(int i = 0; i < length_lc; ++i){
-            result[i] = lc[i];
-        }
-        for(int i = 0; i < length_rc; ++i){
-            result[i+length_lc] = rc[i]; 
-        }
-        result[length_lc+length_rc]='\0';
-        return result;
-    }
-    default:{
-        fprintf(stderr,"[WARNING] THIS PART ONLY SUPPORT CHAR NOW");
-        return NULL;
-        break;
-    }
-    }   
+//         char *lc = (char *)l;
+//         char *rc = (char *)r;
+//         int length_lc = strlen(lc);
+//         int length_rc = strlen(rc);
+//         char *result = (char *)malloc(sizeof(char)*(length_lc+length_rc+1));
+//         if (result == NULL) {
+//             fprintf(stderr, "内存分配失败\n");
+//             return NULL;
+//             }
+//         for(int i = 0; i < length_lc; ++i){
+//             result[i] = lc[i];
+//         }
+//         for(int i = 0; i < length_rc; ++i){
+//             result[i+length_lc] = rc[i]; 
+//         }
+//         result[length_lc+length_rc]='\0';
+//         return result;
+//     }
+//     default:{
+//         fprintf(stderr,"[WARNING] THIS PART ONLY SUPPORT CHAR NOW");
+//         return NULL;
+//         break;
+//     }
+//     }   
     
-}
-void *ncat(void *l, void *r, int cat_num,char type){
-    if(strlen((char *)r)==0)return l;
-        switch (type)
-    {
-    case 'c':{
+// }
+// void *ncat(void *l, void *r, int cat_num,char type){
+//     if(strlen((char *)r)==0)return l;
+//         switch (type)
+//     {
+//     case 'c':{
     
-        char *lc = (char *)l;
-        char *rc = (char *)r;
-        int length_lc = strlen(lc);
-        int length_rc = cat_num;    //major diff with function of cat
-        char *result = (char *)malloc(sizeof(char)*(length_lc+length_rc));
-        for(int i = 0; i < length_lc; ++i){
-            result[i] = lc[i];
-        }
-        for(int i = 0; i < length_rc; ++i){
-            result[i+length_lc] = rc[i]; 
-        }
-        result[length_lc+length_rc]='\0';
-        return result;
-    }
-    default:{
-        fprintf(stderr,"[WARNING] THIS PART ONLY SUPPORT CHAR NOW");
-        return NULL;
-        break;
-    }
-    }   
-}
+//         char *lc = (char *)l;
+//         char *rc = (char *)r;
+//         int length_lc = strlen(lc);
+//         int length_rc = cat_num;    //major diff with function of cat
+//         char *result = (char *)malloc(sizeof(char)*(length_lc+length_rc+1));
+//         if (result == NULL) {
+//             fprintf(stderr, "内存分配失败\n");
+//             return NULL;
+//         }
+//         for(int i = 0; i < length_lc; ++i){
+//             result[i] = lc[i];
+//         }
+//         for(int i = 0; i < length_rc; ++i){
+//             result[i+length_lc] = rc[i]; 
+//         }
+//         result[length_lc+length_rc]='\0';
+//         return result;
+//     }
+//     default:{
+//         fprintf(stderr,"[WARNING] THIS PART ONLY SUPPORT CHAR NOW");
+//         return NULL;
+//         break;
+//     }
+//     }   
+// }
 
-char *str_split(const char *str,const char *sep){
-    //Return a list of the substrings in the string, using sep as the separator string.
-    char *substrings = "";
-    int compare_len = strlen(sep);
-    int last_match_position = 0,i;
-    for(i = 0; i < strlen(str); ++i){
-        //log_debug("i=%d, str+i=%c,sep=%c  strcmp=%d",i,*(str+i), *sep, strncmp(str+i,sep,compare_len));
-        if(strncmp(str+i,sep,compare_len) == 0){
-            substrings = ncat(substrings, str + last_match_position, i - last_match_position, 'c');
-            printf("substrings=%s\n",substrings);
-            last_match_position = i + compare_len;
-            i+=compare_len-1;
-        }
-    }
-    //if(last_match_position!=strlen(str))
-    substrings = ncat(substrings, str + last_match_position, i - last_match_position, 'c');
-    printf("substrings=%s\n",substrings);
-    return substrings;
-}
+// char *str_split(const char *str,const char *sep){
+//     //Return a list of the substrings in the string, using sep as the separator string.
+//     char *substrings = "";
+//     int compare_len = strlen(sep);
+//     int last_match_position = 0,i;
+//     for(i = 0; i < strlen(str); ++i){
+//         //log_debug("i=%d, str+i=%c,sep=%c  strcmp=%d",i,*(str+i), *sep, strncmp(str+i,sep,compare_len));
+//         if(strncmp(str+i,sep,compare_len) == 0){
+//             substrings = ncat(substrings, str + last_match_position, i - last_match_position, 'c');
+//             printf("substrings=%s\n",substrings);
+//             last_match_position = i + compare_len;
+//             i+=compare_len-1;
+//         }
+//     }
+//     //if(last_match_position!=strlen(str))
+//     substrings = ncat(substrings, str + last_match_position, i - last_match_position, 'c');
+//     printf("substrings=%s\n",substrings);
+//     return substrings;
+// }
 
 void normalization(double *arr, int len, int maxvalue){//归一化 
     for(int i = 0; i < len; ++i){
@@ -140,21 +148,21 @@ typedef struct _vector
 vector *vector_create(void)
 {
 	vector* h = (vector*)malloc(sizeof(vector));
+    if (h == NULL) {
+    fprintf(stderr, "%s内存分配失败\n",__LINE__);
+    return NULL;
+    }
 	h->capacity = 0;
 	h->size = 0;
 
 	return h;
 }
-vector* vector_realloc(vector* h, vec_type_t type_size)
-{
-	vec_type_t new_capacity = (h->capacity == 0) ? 1 : h->capacity * 2;
-	vector* new_h = (vector*)realloc(h, sizeof(vector) + new_capacity * type_size);
-	new_h->capacity = new_capacity;
-
-	return new_h;
-}
 vector *vector_alloc_capacity(vector *vec,int cap, vec_type_t type_size){
 	vec->data = (vec_type_t*)malloc(cap * type_size);
+    if (vec->data == NULL) {
+    fprintf(stderr, "%s内存分配失败\n",__LINE__);
+        return NULL;
+    }
 	vec->capacity = cap;
 
 	return vec;
@@ -174,6 +182,10 @@ void vector2D_fprint(FILE *log ,vector**vector2D, int row, int maxcolum){
 vector **readlines(FILE *fileobj,vector ** vector2D,int maxrow, int maxcolumn){
     int buffer_size = 20, i, c;
     char *buffer = (char *)malloc(sizeof(char)*buffer_size);
+    if (buffer == NULL) {
+    fprintf(stderr, "%s内存分配失败\n",__LINE__);
+        return NULL;
+    }
     for(i = 0; i < buffer_size; ++i)buffer[i]='\0';
     //printf("buffer[0]= %d",buffer[0]);
     for(i = 0; i < maxrow; ++i){
@@ -181,10 +193,10 @@ vector **readlines(FILE *fileobj,vector ** vector2D,int maxrow, int maxcolumn){
         vector2D[i] = vector_alloc_capacity(vector2D[i], maxcolumn, sizeof(vec_type_t));
     }
     int nu_line = 0;
-    int nu_digit=0;    //digit position in a line
+    int nu_digit=0;    //last digit position in a line
     c = fgetc(fileobj);
     while(c != EOF){
-        for(i=0; c != ',' && c!= '\n'; ++i){
+        for(i=0; c != ',' && c!= '\n' && c != EOF; ++i){
             buffer[i]=c;
             c = fgetc(fileobj);
         }
@@ -207,10 +219,11 @@ vector **readlines(FILE *fileobj,vector ** vector2D,int maxrow, int maxcolumn){
                 nu_digit = 0;
             }
         }
-        
+        if(c == EOF)break;
         c = fgetc(fileobj);
 
     }
+    free(buffer);
     //log_trace("finish readlines");
     return vector2D;
 } 
@@ -234,10 +247,18 @@ Matrix *Matrix_gen(int row, int column, MATRIX_TYPE *data) {/*
  * Generate a new Matrix(struct).
  * 导入_生成矩阵*/
     Matrix *_mat = (Matrix *) malloc(sizeof(Matrix));
+    if (_mat == NULL) {
+    fprintf(stderr, "%s内存分配失败\n",__LINE__);
+        return NULL;
+    }
     _mat->row = row;
     _mat->column = column;
     int size = _mat->row * _mat->column;
     _mat->data = (MATRIX_TYPE *) malloc((size) * sizeof(MATRIX_TYPE));
+    if (_mat->data == NULL) {
+        fprintf(stderr, "%s内存分配失败\n",__LINE__);
+        return NULL;
+    }
     //log_info("%d",++num);
     memcpy(_mat->data, data, (size)*sizeof(MATRIX_TYPE));
     /*
@@ -256,9 +277,17 @@ Matrix *M_T(Matrix *_mat_source) {/*
  * Transpose (create).
  * 转置 */
     Matrix *_mat = (Matrix *) malloc(sizeof(Matrix));
+    if (_mat == NULL) {
+    fprintf(stderr, "%s内存分配失败\n",__LINE__);
+        return NULL;
+    }
     _mat->column = _mat_source->row;
     _mat->row = _mat_source->column;
     MATRIX_TYPE *data = (MATRIX_TYPE *) malloc(sizeof(MATRIX_TYPE) * (_mat->column) * (_mat->row));
+    if (data == NULL) {
+    fprintf(stderr, "%s内存分配失败\n",__LINE__);
+        return NULL;
+    }
     _mat->data = data;
     int i, j;
     for (i = 0; i < (_mat->row); i++) {
@@ -279,6 +308,7 @@ int M_free(Matrix *_mat) {/*
     }
     free(_mat->data);
     free(_mat);
+    return 0;
 }
 
 Matrix *M_numul(Matrix *_mat, MATRIX_TYPE _num) {/*
@@ -295,9 +325,14 @@ Matrix *M_Zeros(int row, int column) {/*
  * 生成全零矩阵*/
     int size_mat = row * column, i;
     MATRIX_TYPE * data = (MATRIX_TYPE * )malloc(size_mat * sizeof(MATRIX_TYPE));
+    if (data == NULL) {
+    fprintf(stderr, "%s内存分配失败\n",__LINE__);
+        return NULL;
+    }
     for(i = 0; i < size_mat; ++i)data[i]=0;
     //memset(data, 0, size_mat * sizeof(MATRIX_TYPE));
     Matrix * zero_mat = Matrix_gen(row, column, data);
+    free(data);
     return zero_mat; 
 }
 
@@ -306,9 +341,14 @@ Matrix *M_Ones(int row, int column) {/*
  * 生成全一矩阵*/
     int size_mat = row * column, i;
     MATRIX_TYPE * data = (MATRIX_TYPE * )malloc(size_mat * sizeof(MATRIX_TYPE));
+    if (data == NULL) {
+    fprintf(stderr, "%s内存分配失败\n",__LINE__);
+        return NULL;
+    }
     for(i = 0; i < size_mat; ++i)data[i]=1;
     //memset(data, 1, size_mat * sizeof(MATRIX_TYPE));
     Matrix * zero_mat = Matrix_gen(row, column, data);
+    free(data);
     return zero_mat; 
 }
 
@@ -323,11 +363,19 @@ Matrix *M_mul(Matrix *_mat_left, Matrix *_mat_right) {/*
         printf(M_mul_001);
     } else {
         _mat_result = (Matrix *) malloc(sizeof(Matrix));
+        if (_mat_result == NULL) {
+            fprintf(stderr, "%s内存分配失败\n",__LINE__);
+            return NULL;
+        }
         int row = _mat_left->row;
         int mid = _mat_left->column;
         int column = _mat_right->column;
         int i, j, k;
         MATRIX_TYPE *_data = (MATRIX_TYPE *) malloc((row * column) * sizeof(MATRIX_TYPE));
+        if (_data == NULL) {
+            fprintf(stderr, "%s内存分配失败\n",__LINE__);
+            return NULL;
+        }
         MATRIX_TYPE temp = 0;
         /*Ergodic*/
         for (i = 0; i < row; i++) {
@@ -358,10 +406,9 @@ Matrix *M_easy_mul(Matrix *_mat_left, Matrix *_mat_right){
     return mat;
 }
 
-Matrix *M_rand(Matrix *_mat){
+Matrix *M_rand(int row, int column){
 
-    Matrix *mat = M_Zeros(_mat->row, _mat->column);
-    M_free(_mat);
+    Matrix *mat = M_Zeros(row, column);
     struct tm time;
     srand(time.tm_hour*60*60+time.tm_min*60+time.tm_sec);
     int size_mat = mat->row * mat->column, i;
@@ -387,7 +434,7 @@ Matrix *M_add_sub(MATRIX_TYPE scale_mat_subed, Matrix *_mat_subed, MATRIX_TYPE s
         _mat_result = M_Zeros(_mat_subed->row, _mat_subed->column);
         int size = (_mat_subed->row) * (_mat_subed->column), i;
         for (i = 0; i < size; i++) {
-            _mat_result->data[i] = (_mat_result->data[i]) * scale_mat_subed - (_mat_minus->data[i]) * scale_mat_minus;
+            _mat_result->data[i] = scale_mat_subed * _mat_subed->data[i] - scale_mat_minus * _mat_minus->data[i];
         }
     } else {
         printf(M_add_sub_003);
@@ -456,8 +503,8 @@ neuralNetwork *Net_init(neuralNetwork *self,int input_nodes, int hidden_nodes, i
     self->hidden_nodes = hidden_nodes;
     self->output_nodes = output_nodes;
     self->learningrate = learningrate;
-    self->wih = M_rand(M_Zeros(hidden_nodes, input_nodes));
-    self->who = M_rand(M_Zeros(output_nodes, hidden_nodes));
+    self->wih = M_rand(hidden_nodes, input_nodes);
+    self->who = M_rand(output_nodes, hidden_nodes);
 
     
     //log_trace("Net_init DONE");
@@ -465,6 +512,8 @@ neuralNetwork *Net_init(neuralNetwork *self,int input_nodes, int hidden_nodes, i
 }
 
 neuralNetwork *Net_train(neuralNetwork *self,MATRIX_TYPE *inputs_list,int len_inputs_list,MATRIX_TYPE *targets_list, int len_targets_list){
+    Matrix *temp,*temp1,*temp2;
+
     Matrix *mat_inputs = Matrix_gen(len_inputs_list, 1, inputs_list);
     Matrix *mat_targets = Matrix_gen(len_targets_list, 1, targets_list);
     Matrix *hiddent_inputs = M_mul(self->wih, mat_inputs);
@@ -473,31 +522,73 @@ neuralNetwork *Net_train(neuralNetwork *self,MATRIX_TYPE *inputs_list,int len_in
     Matrix *final_outputs = M_sigmoid(final_inputs);
     //2026  06  18--------------------------------------------------------------------------------------------------------------------------------------------
     Matrix *output_errors = M_add_sub(1, mat_targets, 1, final_outputs);
-    Matrix *hiddent_errors = M_mul(M_T(self->who), output_errors);
+    temp = M_T(self->who);
+    Matrix *hiddent_errors = M_mul(temp, output_errors);
+    M_free(temp);
 
-    self->wih = M_rand(self->wih);
-    self->who = M_rand(self->who);
-
+    
+    
 
     //self.who += self.lr * numpy.dot((output_errors * final_outputs*(1.0 - final_outputs) ), numpy.transpose(hiddent_outputs))
     
     Matrix *mat_ones = M_Ones(final_outputs->row, final_outputs->column);
     Matrix * who_ones_sub_final_outputs = M_add_sub(1, mat_ones, 1, final_outputs);   //(1.0 - final_outputs)
-    Matrix *who__right =M_easy_mul(   M_easy_mul(output_errors, final_outputs)   ,   who_ones_sub_final_outputs);//(output_errors * final_outputs*(1.0 - final_outputs) )
-    Matrix *who__result = M_numul(M_mul( who__right , M_T(hiddent_outputs)), self->learningrate); //self.lr * numpy.dot((output_errors * final_outputs*(1.0 - final_outputs) ), numpy.transpose(hiddent_outputs))
-    self->who = M_add_sub(1, self->who, -1, who__result);
+    temp = M_easy_mul(output_errors, final_outputs);//output_errors * final_outputs
+    Matrix *who__right =M_easy_mul(   temp   ,   who_ones_sub_final_outputs);//(output_errors * final_outputs*(1.0 - final_outputs) )
+    M_free(temp);
+    temp1=M_T(hiddent_outputs);
+    temp2=M_mul( who__right , temp1);
+    Matrix *who__result = M_numul(temp2, self->learningrate); //self.lr * numpy.dot((output_errors * final_outputs*(1.0 - final_outputs) ), numpy.transpose(hiddent_outputs))
+    M_free(temp1);
+    M_free(temp2);
+    temp = M_add_sub(1, self->who, -1, who__result);
+    M_free(self->who);
+    self->who = M_copy(temp);
+    M_free(temp);
     
 
     
-    //self.wih += self.lr * numpy.dot((hiddent_errors * hidden_outputs*(1.0 - hiddent_outputs) ), numpy.transpose(inputs))
-    Matrix * wih_ones_sub_final_outputs = M_add_sub(1, M_Ones(hiddent_outputs->row, hiddent_outputs->column), 1, hiddent_outputs);   //(1.0 - hiddent_outputs)
-    Matrix *wih__right =M_easy_mul(   M_easy_mul(hiddent_errors, hiddent_outputs)   ,   wih_ones_sub_final_outputs);//(hiddent_errors * hiddent_outputs*(1.0 - hiddent_outputs) )
-    Matrix *wih__result = M_numul(M_mul( wih__right , M_T(mat_inputs)), self->learningrate);//self.lr * numpy.dot((hiddent_errors * hiddent_outputs*(1.0 - hiddent_outputs) ), numpy.transpose(inputs))
-    self->wih = M_add_sub(1, self->wih, -1, wih__result);
-    log_info("train DONE %d",num++);
-    if(num==382)
-    Sleep(1);
+    //self.wih += self.lr * numpy.dot((hiddent_errors * hiddent_outputs*(1.0 - hiddent_outputs) ), numpy.transpose(inputs))
+
+    temp = M_Ones(hiddent_outputs->row, hiddent_outputs->column);
+    Matrix * wih_ones_sub_final_outputs = M_add_sub(1, temp, 1, hiddent_outputs);   //(1.0 - hiddent_outputs)
+    M_free(temp);
+    temp = M_easy_mul(hiddent_errors, hiddent_outputs);
+    Matrix *wih__right =M_easy_mul(   temp   ,   wih_ones_sub_final_outputs);//(hiddent_errors * hiddent_outputs*(1.0 - hiddent_outputs) )
+    M_free(temp);
+    temp1=M_T(mat_inputs);
+    temp2=M_mul( wih__right , temp1);
+    Matrix *wih__result = M_numul(temp2, self->learningrate);//self.lr * numpy.dot((hiddent_errors * hiddent_outputs*(1.0 - hiddent_outputs) ), numpy.transpose(inputs))
+    M_free(temp1);
+    M_free(temp2);
+    temp = M_add_sub(1, self->wih, -1, wih__result);
+    M_free(self->wih);
+    self->wih = M_copy(temp);
+    M_free(temp);
+    if(num++ > 2284)
+    {
+        log_info("train DONE %d",num);
+    }
     
+    //free
+    M_free(mat_inputs);
+    M_free(mat_targets);
+    M_free(hiddent_inputs);
+    M_free(hiddent_outputs);
+    M_free(final_inputs);
+    M_free(final_outputs);
+    M_free(output_errors);
+    M_free(hiddent_errors);
+
+    M_free(mat_ones);
+    M_free(who_ones_sub_final_outputs);
+    M_free(who__right);
+    M_free(who__result);
+
+    M_free(wih_ones_sub_final_outputs);
+    M_free(wih__right);
+    M_free(wih__result);
+    //END free
     
     return self;
 }
@@ -516,18 +607,27 @@ Matrix *query(neuralNetwork *self, MATRIX_TYPE *inputs_list, int len_inputs_list
     Matrix *hiddent_outputs = M_sigmoid(hiddent_inputs);
     Matrix *final_inputs = M_mul(self->who, hiddent_outputs);
     Matrix *final_outputs = M_sigmoid(final_inputs);
+
+    M_free(mat_inputs);
+    M_free(hiddent_inputs);
+    M_free(hiddent_outputs);
+    M_free(final_inputs);
+
     return final_outputs;
-    log_info("query DONE");
-    exit(1);
 }
 
 int is_get_score(neuralNetwork *self, MATRIX_TYPE *inputs_list,int len_inputs_list,MATRIX_TYPE *targets_list, int len_targets_list){
     Matrix *final_output=query(self, inputs_list, len_inputs_list);
     int mat_size=final_output->row*final_output->column, i;
+    Matrix *temp = Matrix_gen(self->output_nodes, 1,targets_list);
     for(i = 0; i < mat_size; ++i){
-        if(M_max_index(final_output) == M_max_index(targets_list))
-        return true;
+        if(M_max_index(final_output) == M_max_index(temp)){
+            M_free(temp);
+            M_free(final_output);
+            return true;
+        }
     }
+    M_free(final_output);
     return false;
 }
 //END define data structure neural network
@@ -558,7 +658,7 @@ int main(){
     Matrix *mat1 = Matrix_gen(3,5,arr1);
     Matrix *mat2 = Matrix_gen(5,3,arr2);
     Matrix *mat3 = M_mul(mat1, mat2);
-    mat3 = M_rand(mat3);
+    
     
     //M_print(mat3);
     //M_print(M_T(mat1));
@@ -586,6 +686,10 @@ int main(){
     int training_nu_rows=60000;
     int training_nu_column=785;
     vector** training_data = (vector **)malloc(sizeof(vector *)*training_nu_rows); 
+    if (training_data == NULL) {
+        fprintf(stderr, "%s内存分配失败\n",__LINE__);
+        return 1;
+    }
     training_data = readlines(training_file_obj, training_data,training_nu_rows, training_nu_column);
     vector2D_fprint(log_file_obj, training_data, training_nu_rows, training_nu_column);
 
@@ -597,6 +701,10 @@ int main(){
     int testing_nu_rows=10000;
     int testing_nu_column=785;
     vector** testing_data = (vector **)malloc(sizeof(vector *)*testing_nu_rows); 
+    if (testing_data == NULL) {
+        fprintf(stderr, "%s内存分配失败\n",__LINE__);
+        return 1;
+    }
     testing_data = readlines(testing_file_obj, testing_data,testing_nu_rows, testing_nu_column);
     vector2D_fprint(log_file_obj, testing_data, testing_nu_rows, testing_nu_column);
     
@@ -606,6 +714,10 @@ int main(){
 //start traning
 //--------------------------------
 neuralNetwork *Net = (neuralNetwork *)malloc(sizeof(neuralNetwork));
+    if (Net == NULL) {
+        fprintf(stderr, "%s内存分配失败\n",__LINE__);
+        return 1;
+    }
 int input_nodes=784;
 int hidden_nodes=100;
 int output_nodes=10;
@@ -621,18 +733,20 @@ for(int i = 0; i < training_nu_rows; ++i){
     
     
     Matrix *training_target_lists = M_Zeros(output_nodes, 1);
-    training_target_lists->data[(int)(training_data[i]->data[0])]+=1;
+    training_target_lists->data[(int)(training_data[i]->data[0])]=1;
     Net = Net_train(Net, training_input_lists, input_nodes, training_target_lists->data, output_nodes);
+    M_free(training_target_lists);
 }
 int score=0;
-for(int i = 0; i < testing_nu_column; ++i){
+for(int i = 0; i < testing_nu_rows; ++i){
     double *testing_input_lists = testing_data[i]->data+1;
-    normalization(testing_input_lists, input_nodes, 256);
+    normalization(testing_input_lists, input_nodes, 255);
     Matrix *testing_target_lists = M_Zeros(output_nodes, 1);
-    testing_target_lists->data[(int)(training_data[i]->data[0])]+=1;
-    score +=is_get_score(Net, testing_input_lists, input_nodes, testing_target_lists, output_nodes);
+    testing_target_lists->data[(int)(testing_data[i]->data[0])]+=1;
+    score +=is_get_score(Net, testing_input_lists, input_nodes, testing_target_lists->data, output_nodes);
+    M_free(testing_target_lists);
 }
-double scorePercent = score/testing_nu_rows;
+double scorePercent = (double)score/testing_nu_rows;
 printf("scorePercent = %f\n",scorePercent);
 
 //END start traning
